@@ -1,0 +1,25 @@
+
+.signup {
+
+    width: 50%;
+    margin: auto;
+    padding: 30px;
+    text-align: center;
+    border-radius: 11px;
+    background: #f7f7f8;
+    box-shadow: inset 25px 25px 50px #a1a1a1,
+            inset -25px -25px 50px #ffffff;
+    
+}
+.form-input {
+
+    padding: 15px;
+    font-size: 15px;
+    width: 70%;
+    border: none;
+    border-radius: 11px;
+background: #ffffff;
+box-shadow: inset 25px 25px 50px #a6a6a6,
+            inset -25px -25px 50px #ffffff;
+    
+}
