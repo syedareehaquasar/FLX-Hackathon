@@ -1,14 +1,9 @@
 import express from 'express';
 import { authJwt } from '../middleware/authJwt.js';
-import { CODPayment, getBuyer, getSellers, getProductsByName, getBuyerOrders, createOrder, getBuyerCart, modifyProductCart, deleteProductCart, sellerProducts, getProduct, getProducts, deleteCart, checkout, paymentVerify } from "../controller/buyer.js"
-import { getProfile, getAssignedOrders, getBuyer, updateStatus } from '../controller/delivery.js';
-import { getOrderById } from '../controller/common.js';
-import { addProduct, getProducts, getDeliverers, getSeller, deleteProduct, searchProductById, searchProductByName, updateProduct, assignOrders, getOrders, getBuyer } from '../controller/seller.js';
-import { getOrderById } from '../controller/common.js';
-
+import { addProduct, getCustomers, getProducts, deleteProduct, searchProductById, updateProduct, getOrders, getCustomer, CODPayment, getProductsByName, getCustomerOrders, getCustomerCart, modifyProductCart, deleteProductCart, customerProducts, getProduct, deleteCart, checkout, paymentVerify, updateStatus, getOrderById } from "../controller/customer.js";
 const router = express.Router();
 
-router.use(function(req, res, next) {
+router.use(function (req, res, next) {
     res.header(
         "Access-Control-Allow-Headers",
         "x-access-token, Origin, Content-Type, Accept"
@@ -18,21 +13,16 @@ router.use(function(req, res, next) {
 
 router.get(
     "/profile", [authJwt.verifyToken],
-    getBuyer
+    getCustomer
 );
 
 router.get(
-    "/sellers", [authJwt.verifyToken],
-    getSellers
+    "/friends", [authJwt.verifyToken],
+    getCustomers
 );
 
 router.get(
     "/search/:name", [authJwt.verifyToken],
-    getProductsByName
-);
-
-router.get(
-    "/search", [authJwt.verifyToken],
     getProductsByName
 );
 
@@ -43,23 +33,18 @@ router.get(
 );
 
 router.get(
-    "/seller/products/:id", [authJwt.verifyToken],
-    sellerProducts
+    "/customer/products/:id", [authJwt.verifyToken],
+    customerProducts
 );
 
 router.get(
     "/order", [authJwt.verifyToken],
-    getBuyerOrders
+    getCustomerOrders
 );
-
-// router.post(
-//     "/order/:id", [authJwt.verifyToken],
-//     createOrder
-// );
 
 router.get(
     "/cart", [authJwt.verifyToken],
-    getBuyerCart
+    getCustomerCart
 );
 
 router.post(
@@ -98,23 +83,13 @@ router.get(
 );
 
 router.get(
-    "/orders", [authJwt.verifyToken],
-    getAssignedOrders
-);
-
-router.get(
-    "/buyer/:id", [authJwt.verifyToken],
-    getBuyer
+    "/customer/:id", [authJwt.verifyToken],
+    getCustomer
 );
 
 router.patch(
     "/orderStatus", [authJwt.verifyToken],
     updateStatus
-);
-
-router.get(
-    "/order/:id", [authJwt.verifyToken],
-    getOrderById
 );
 
 router.post(
@@ -125,21 +100,6 @@ router.post(
 router.get(
     "/products", [authJwt.verifyToken],
     getProducts
-);
-
-router.get(
-    "/deliverers", [authJwt.verifyToken],
-    getDeliverers
-);
-
-router.post(
-    "/deliverers/add", [authJwt.verifyToken],
-    signup
-);
-
-router.get(
-    "/profile", [authJwt.verifyToken],
-    getSeller
 );
 
 router.delete(
@@ -158,23 +118,13 @@ router.get(
 );
 
 router.get(
-    "/products/:name", [authJwt.verifyToken],
-    searchProductByName
-);
-
-router.get(
     "/orders", [authJwt.verifyToken],
     getOrders
 );
 
-router.patch(
-    "/assignOrder", [authJwt.verifyToken],
-    assignOrders
-);
-
 router.get(
-    "/buyer/:id", [authJwt.verifyToken],
-    getBuyer
+    "/customer/:id", [authJwt.verifyToken],
+    getCustomer
 );
 
 router.get(
