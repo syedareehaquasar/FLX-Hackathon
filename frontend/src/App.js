@@ -4,6 +4,7 @@ import './App.css';
 import { useState } from 'react';
 import Navbar from './components/Navbar';
 import ProductCard from './components/ProductCard';
+import Products from './components/Products';
 
 function App() {
 
@@ -11,7 +12,8 @@ function App() {
   return (
     <div className="App">
       {/*isLoggedIn === false && <Login />*/}
-      <ProductCard />
+      <Products />
+      
       <Navbar />
       
     </div>

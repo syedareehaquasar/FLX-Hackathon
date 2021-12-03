@@ -1,5 +1,5 @@
 .menu-toggler {
-    position: absolute;
+    position: fixed;
     display: block;
     bottom: 5%;
     right:0;
@@ -64,7 +64,7 @@
     border-radius: 2.5px;
     background: black;
     transition: transform 0.5s top 0.5s;
-    position: absolute;
+    position: fixed;
     display: block;
     bottom: 5%;
     left: 0;
@@ -105,7 +105,7 @@
   }
   
   .menu-item {
-    position: absolute;
+    position: fixed;
     display: block;
     bottom: 5%;
     left: 0;
