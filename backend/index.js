@@ -13,6 +13,7 @@ const app = express();
 
 dotenv.config();
 
+app.use(bodyParser.json());
 app.use(express.json({ limit: "30mb", extended: true }));
 app.use(express.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
@@ -27,8 +28,7 @@ app.use('/review', reviewRoutes);
 
 mongoose.connect(CONNECTION_URL, {
         useNewUrlParser: true,
-        useUnifiedTopology: true,
-        useFindAndModify: false
+        useUnifiedTopology: true
     })
     .then(() => app.listen(PORT, () => console.log(`Server running on port: ${PORT}`)))
     .catch((error) => console.log(error.message));

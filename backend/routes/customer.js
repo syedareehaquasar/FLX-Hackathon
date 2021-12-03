@@ -1,6 +1,6 @@
 import express from 'express';
 import { authJwt } from '../middleware/authJwt.js';
-import { addProduct, getProducts, getDeliverers, getSeller, deleteProduct, searchProductById, searchProductByName, updateProduct, assignOrders, getOrders, getCustomer, CODPayment, getSellers, getProductsByName, getCustomerOrders, getCustomerCart, modifyProductCart, deleteProductCart, sellerProducts, getProduct, getProducts, deleteCart, checkout, paymentVerify } from "../controller/customer.js";
+import { addProduct, getCustomers, getProducts, deleteProduct, searchProductById, updateProduct, getOrders, getCustomer, CODPayment, getProductsByName, getCustomerOrders, getCustomerCart, modifyProductCart, deleteProductCart, customerProducts, getProduct, deleteCart, checkout, paymentVerify, updateStatus, getOrderById } from "../controller/customer.js";
 const router = express.Router();
 
 router.use(function (req, res, next) {
@@ -17,8 +17,8 @@ router.get(
 );
 
 router.get(
-    "/sellers", [authJwt.verifyToken],
-    getSellers
+    "/friends", [authJwt.verifyToken],
+    getCustomers
 );
 
 router.get(
@@ -34,18 +34,13 @@ router.get(
 
 router.get(
     "/customer/products/:id", [authJwt.verifyToken],
-    sellerProducts
+    customerProducts
 );
 
 router.get(
     "/order", [authJwt.verifyToken],
     getCustomerOrders
 );
-
-// router.post(
-//     "/order/:id", [authJwt.verifyToken],
-//     createOrder
-// );
 
 router.get(
     "/cart", [authJwt.verifyToken],
@@ -88,11 +83,6 @@ router.get(
 );
 
 router.get(
-    "/orders", [authJwt.verifyToken],
-    getAssignedOrders
-);
-
-router.get(
     "/customer/:id", [authJwt.verifyToken],
     getCustomer
 );
@@ -100,11 +90,6 @@ router.get(
 router.patch(
     "/orderStatus", [authJwt.verifyToken],
     updateStatus
-);
-
-router.get(
-    "/order/:id", [authJwt.verifyToken],
-    getOrderById
 );
 
 router.post(
@@ -115,21 +100,6 @@ router.post(
 router.get(
     "/products", [authJwt.verifyToken],
     getProducts
-);
-
-router.get(
-    "/deliverers", [authJwt.verifyToken],
-    getDeliverers
-);
-
-router.post(
-    "/deliverers/add", [authJwt.verifyToken],
-    signup
-);
-
-router.get(
-    "/profile", [authJwt.verifyToken],
-    getSeller
 );
 
 router.delete(
@@ -148,18 +118,8 @@ router.get(
 );
 
 router.get(
-    "/products/:name", [authJwt.verifyToken],
-    searchProductByName
-);
-
-router.get(
     "/orders", [authJwt.verifyToken],
     getOrders
-);
-
-router.patch(
-    "/assignOrder", [authJwt.verifyToken],
-    assignOrders
 );
 
 router.get(
