@@ -30,7 +30,6 @@ function FormSignup() {
             <h1>Login</h1>
             <br/>
             <form className="form">
-                
                 <div className="form-inputs">
                     <label className="form-label" htmlFor="email">
                     
@@ -52,7 +51,7 @@ function FormSignup() {
                     
                         <input className="form-input"
                             type="password"
-                            placeholder="Enter New Password"
+                            placeholder="Enter Password"
                             name="pwd1"
                             onChange={handleChange}
                             value={values.pwd1}

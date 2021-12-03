@@ -12,9 +12,11 @@ function App() {
   return (
     <div className="App">
       {/*isLoggedIn === false && <Login />*/}
-      <Products />
+      {/* <Products /> */}
+      {/* <ProductCard /> */}
+      <Login />
       
-      <Navbar />
+      {/* <Navbar /> */}
       
     </div>
   );
