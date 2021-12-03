@@ -4,12 +4,8 @@ import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 
-import buyerRoutes from './routes/buyer.js';
+import customerRoutes from './routes/customer.js';
 import customerAuthRoutes from './routes/customerAuth.js';
-import sellerRoutes from './routes/seller.js';
-import sellerAuthRoutes from './routes/sellerAuth.js';
-import deliveryRoutes from './routes/delivery.js';
-import deliveryAuthRoutes from './routes/deliveryAuth.js';
 import passwordResetRoutes from './routes/passwordReset.js';
 import reviewRoutes from './routes/review.js';
 
@@ -24,12 +20,8 @@ app.use(cors());
 const CONNECTION_URL = process.env.CONNECTION_URL;
 const PORT = process.env.PORT || 5000;
 
-app.use('/buyer', buyerRoutes);
+app.use('/customer', customerRoutes);
 app.use('/customerAuth', customerAuthRoutes);
-app.use('/seller', sellerRoutes);
-app.use('/sellerAuth', sellerAuthRoutes);
-app.use('/delivery', deliveryRoutes);
-app.use('/deliveryAuth', deliveryAuthRoutes);
 app.use('/passwordReset', passwordResetRoutes);
 app.use('/review', reviewRoutes);
 
@@ -43,5 +35,5 @@ mongoose.connect(CONNECTION_URL, {
 
 
 app.get('/', (req, res) => {
-    res.send("Welcome to B2C System!");
+    res.send("Welcome to Homie System!");
 });

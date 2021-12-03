@@ -1,8 +1,7 @@
-import buyer from "../models/buyer.js";
+import customer from "../models/customer.js";
 import cart from "../models/cart.js";
 import product from "../models/product.js";
 import order from "../models/order.js";
-import seller from "../models/seller.js";
 import shortid from "shortid";
 import razorpay from "razorpay";
 import crypto from "crypto";
@@ -11,7 +10,7 @@ export var getProductsByName = async(req, res) => {
     const productName = req.params.name;
     try {
         if (!productName) {
-            return res.status(201).json(seller);
+            return res.status(201).json("No Product found");
         }
         const products = await product.find({ name: { '$regex': productName, '$options': 'i' } });
         if (products.length == 0) {
@@ -19,21 +18,7 @@ export var getProductsByName = async(req, res) => {
                 message: "No Products found "
             });
         } else {
-            var sellersL = []
-            for (var i = 0; i < products.length; i++) {
-                // console.log(products[i].sellerId);
-                const sellerDetails = await seller.find({ _id: products[i].sellerId });
-                // console.log(sellerDetails);
-                sellersL.push(sellerDetails[0]);
-                console.log(sellersL);
-            };
-            console.log(sellersL);
-            return res.status(200).json(sellersL);
-            // return res.status(200).json(products);
-            // seller.findOne({ _id: products.sellerId }).exec().then(sellerDetails => {
-            //     return res.status(200).json(sellerDetails);
-            // });
-            // res.status(500).json(sellersL);
+            return res.status(200).json(products);
         }
     } catch (err) {
         console.log(err);
@@ -42,26 +27,26 @@ export var getProductsByName = async(req, res) => {
 
 };
 
-export var getBuyer = async(req, res) => {
-    const buyerId = req.user.id;
-    const buyerProf = await buyer.findOne({ _id: buyerId });
-    if (buyerProf) {
-        res.status(200).json(buyerProf);
+export var getCustomer = async(req, res) => {
+    const customerId = req.user.id;
+    const customerProf = await customer.findOne({ _id: customerId });
+    if (customerProf) {
+        res.status(200).json(customerProf);
     } else {
-        res.status(404).json("Buyer Not Found");
+        res.status(404).json("Customer Not Found");
     }
 }
 
-export var getBuyerCart = async(req, res) => {
-    const buyer_id = req.user.id;
-    const buyerExist = await buyer.findOne({ _id: buyer_id });
-    if (!buyerExist) {
+export var getCustomerCart = async(req, res) => {
+    const customer_id = req.user.id;
+    const customerExist = await customer.findOne({ _id: customer_id });
+    if (!customerExist) {
         return res.status(403).send("Unauthorised User");
     }
     try {
-        let buyerCart = await cart.findOne({ buyerId: buyer_id });
-        if (buyerCart && buyerCart.products.length > 0) {
-            res.send(buyerCart);
+        let customerCart = await cart.findOne({ customerId: customer_id });
+        if (customerCart && customerCart.products.length > 0) {
+            res.send(customerCart);
         } else {
             res.send("Cart is Empty!");
         }
@@ -72,14 +57,14 @@ export var getBuyerCart = async(req, res) => {
 };
 
 export var modifyProductCart = async(req, res) => {
-    const buyer_id = req.user.id;
-    const buyerExist = await buyer.findOne({ _id: buyer_id });
-    if (buyerExist === null) {
+    const customer_id = req.user.id;
+    const customerExist = await customer.findOne({ _id: customer_id });
+    if (customerExist === null) {
         return res.status(403).send("Unauthorised User");
     }
     const { productId, quantity } = req.body;
     try {
-        let buyerCart = await cart.findOne({ buyerId: buyer_id });
+        let customerCart = await cart.findOne({ customerId: customer_id });
         let productToAdd = await product.findOne({ _id: productId });
 
         if (!productToAdd) {
@@ -89,41 +74,41 @@ export var modifyProductCart = async(req, res) => {
         const price = productToAdd.price;
         const name = productToAdd.name;
         const img = productToAdd.img;
-        if (buyerCart) {
+        if (customerCart) {
 
-            if (buyerCart.products.length == 0) {
-                await cart.deleteOne({ _id: buyerCart._id });
+            if (customerCart.products.length == 0) {
+                await cart.deleteOne({ _id: customerCart._id });
                 const newCart = await cart.create({
-                    buyerId: buyer_id,
+                    customerId: customer_id,
                     products: [{ productId, quantity, name, price, img }],
                     bill: quantity * price
                 });
                 return res.status(201).send(newCart);
             }
 
-            const productExistingCart = await product.findOne({ _id: buyerCart.products[0].productId });
-            if (JSON.stringify(productToAdd.sellerId) !== JSON.stringify(productExistingCart.sellerId)) {
+            const productExistingCart = await product.findOne({ _id: customerCart.products[0].productId });
+            if (JSON.stringify(productToAdd.customerId) !== JSON.stringify(productExistingCart.customerId)) {
                 return res.status(300).json({ msg: "Delete existing cart to add products from another shop!" });
             };
             //cart exists
-            let itemIndex = buyerCart.products.findIndex(p => p.productId == productId);
+            let itemIndex = customerCart.products.findIndex(p => p.productId == productId);
 
             if (itemIndex > -1) {
                 //product exists, update the quantity
-                let productItem = buyerCart.products[itemIndex];
+                let productItem = customerCart.products[itemIndex];
                 productItem.quantity += quantity;
-                buyerCart.products[itemIndex] = productItem;
+                customerCart.products[itemIndex] = productItem;
             } else {
                 //product does not exists, add new item
-                buyerCart.products.push({ productId, quantity, name, price, img });
+                customerCart.products.push({ productId, quantity, name, price, img });
             }
-            buyerCart.bill += quantity * price;
-            buyerCart = await buyerCart.save();
-            return res.status(201).send(buyerCart);
+            customerCart.bill += quantity * price;
+            customerCart = await customerCart.save();
+            return res.status(201).send(customerCart);
         } else {
             //no cart, create new cart
             const newCart = await cart.create({
-                buyerId: buyer_id,
+                customerId: customer_id,
                 products: [{ productId, quantity, name, price, img }],
                 bill: quantity * price
             });
@@ -136,19 +121,19 @@ export var modifyProductCart = async(req, res) => {
 };
 
 export var deleteProductCart = async(req, res) => {
-    const buyer_id = req.user.id;
+    const customer_id = req.user.id;
     const productId = req.params.productId;
-    const buyerExist = await buyer.findOne({ _id: buyer_id });
-    if (buyerExist === null) {
+    const customerExist = await customer.findOne({ _id: customer_id });
+    if (customerExist === null) {
         return res.status(403).send("Unauthorised User");
     }
     try {
-        let buyerCart = await cart.findOne({ buyerId: buyer_id });
-        if (buyerCart) {
-            buyerCart.products = buyerCart.products.filter(obj => {
+        let customerCart = await cart.findOne({ customerId: customer_id });
+        if (customerCart) {
+            customerCart.products = customerCart.products.filter(obj => {
                 return obj.productId !== productId;
             });
-            buyerCart.save();
+            customerCart.save();
             return res.status(201).send("Updated Cart");
         } else {
             return res.status(201).json("Cart is already empty!");
@@ -159,13 +144,13 @@ export var deleteProductCart = async(req, res) => {
     }
 };
 
-export var getBuyerOrders = async(req, res) => {
-    const buyer_id = req.user.id;
-    const buyerExist = await buyer.findOne({ _id: buyer_id });
-    if (buyerExist === null) {
+export var getCustomerOrders = async(req, res) => {
+    const customer_id = req.user.id;
+    const customerExist = await customer.findOne({ _id: customer_id });
+    if (customerExist === null) {
         return res.status(403).send("Unauthorised User");
     }
-    order.find({ buyerId: buyer_id }).sort({ date: -1 }).exec().then(docs => {
+    order.find({ customerId: customer_id }).sort({ date: -1 }).exec().then(docs => {
         res.status(200).json({
             count: docs.length,
             orders: docs
@@ -181,16 +166,16 @@ var instance = new razorpay({ key_id: 'rzp_test_5AmHwMVymTPMzT', key_secret: 'IZ
 
 export var checkout = async(req, res) => {
     try {
-        const buyerId = req.user.id;
-        let buyerCart = await cart.findOne({ buyerId: buyerId });
-        let user = await buyer.findOne({ _id: buyerId });
+        const customerId = req.user.id;
+        let customerCart = await cart.findOne({ customerId: customerId });
+        let user = await customer.findOne({ _id: customerId });
         if (user === null) {
             return res.status(403).send("Unauthorised User");
         }
 
-        if (buyerCart) {
+        if (customerCart) {
             var options = {
-                amount: (buyerCart.bill * 100), // amount in the smallest currency unit
+                amount: (customerCart.bill * 100), // amount in the smallest currency unit
                 currency: "INR",
                 receipt: shortid.generate()
             };
@@ -217,33 +202,32 @@ export var checkout = async(req, res) => {
 
 export var CODPayment = async(req, res) => {
     try {
-        const buyerId = req.user.id;
-        let user = await buyer.findOne({ _id: buyerId });
+        const customerId = req.user.id;
+        let user = await customer.findOne({ _id: customerId });
         if (user === null) {
             return res.status(403).send("Unauthorised User");
         }
-        let buyerCart = await cart.findOne({ buyerId: buyerId });
+        let customerCart = await cart.findOne({ customerId: customerId });
 
-        const productDetails = await product.findOne({ _id: buyerCart.products[0].productId });
-        const sellerDetails = await seller.findOne({ _id: productDetails.sellerId });
+        const productDetails = await product.findOne({ _id: customerCart.products[0].productId });
+        const customerDetails = await customer.findOne({ _id: productDetails.customerId });
 
         var sum = 0;
-        for (let i = 0; i < buyerCart.products.length; i++) {
-            sum += buyerCart.products[i].quantity;
+        for (let i = 0; i < customerCart.products.length; i++) {
+            sum += customerCart.products[i].quantity;
         }
 
         await order.create({
-            buyerId,
-            products: buyerCart.products,
-            bill: buyerCart.bill,
-            sellerId: productDetails.sellerId,
+            customerId,
+            products: customerCart.products,
+            bill: customerCart.bill,
+            customerId: productDetails.customerId,
             status: "Order Placed",
-            shopName: sellerDetails.shopName,
             quantity: sum,
             orderDetails: [{ "OrderId": shortid.generate(), "Payment Mode": "COD" }, ],
-            buyer: user
+            customer: user
         });
-        await cart.deleteOne({ _id: buyerCart._id });
+        await cart.deleteOne({ _id: customerCart._id });
         res.status(201).json({ "message": "Order Placed!" });
 
     } catch (err) {
@@ -254,13 +238,13 @@ export var CODPayment = async(req, res) => {
 
 export var paymentVerify = async(req, res) => {
     try {
-        const buyerId = req.user.id;
-        let user = await buyer.findOne({ _id: buyerId });
+        const customerId = req.user.id;
+        let user = await customer.findOne({ _id: customerId });
         if (user === null) {
             return res.status(403).send("Unauthorised User");
         }
 
-        let buyerCart = await cart.findOne({ buyerId: buyerId });
+        let customerCart = await cart.findOne({ customerId: customerId });
 
         let body = req.body.razorpay_order_id + "|" + req.body.razorpay_payment_id;
 
@@ -270,28 +254,27 @@ export var paymentVerify = async(req, res) => {
 
         var response = { "signatureIsValid": "false" }
 
-        const productDetails = await product.findOne({ _id: buyerCart.products[0].productId });
-        const sellerDetails = await seller.findOne({ _id: productDetails.sellerId });
+        const productDetails = await product.findOne({ _id: customerCart.products[0].productId });
+        const customerDetails = await customer.findOne({ _id: productDetails.customerId });
 
         var sum = 0;
-        for (let i = 0; i < buyerCart.products.length; i++) {
-            sum += buyerCart.products[i].quantity;
+        for (let i = 0; i < customerCart.products.length; i++) {
+            sum += customerCart.products[i].quantity;
         }
 
         if (expectedSignature === req.body.razorpay_signature)
             response = { "signatureIsValid": "true", "message": "Order Created!" };
         await order.create({
-            buyerId,
-            products: buyerCart.products,
-            bill: buyerCart.bill,
-            sellerId: productDetails.sellerId,
+            customerId,
+            products: customerCart.products,
+            bill: customerCart.bill,
+            customerId: productDetails.customerId,
             status: "Order Placed",
-            shopName: sellerDetails.shopName,
             quantity: sum,
             orderDetails: [{ "OrderId": req.body.razorpay_order_id, "paymentId": req.body.razorpay_payment_id, "Signature": req.body.razorpay_signature, "Payment Mode": "Online" }],
-            buyer: user
+            customer: user
         });
-        await cart.deleteOne({ _id: buyerCart._id });
+        await cart.deleteOne({ _id: customerCart._id });
         res.status(201).send(response);
     } catch (err) {
         console.log(err);
@@ -300,14 +283,14 @@ export var paymentVerify = async(req, res) => {
 };
 
 export var deleteCart = async(req, res) => {
-    const buyerId = req.user.id;
-    let user = await buyer.findOne({ _id: buyerId });
+    const customerId = req.user.id;
+    let user = await customer.findOne({ _id: customerId });
     if (user === null) {
         return res.status(403).send("Unauthorised User");
     }
-    let buyerCart = await cart.findOne({ buyerId: buyerId });
+    let customerCart = await cart.findOne({ customerId: customerId });
     try {
-        await cart.deleteOne({ _id: buyerCart._id });
+        await cart.deleteOne({ _id: customerCart._id });
         res.status(200).send("Cart deleted");
     } catch (err) {
         console.log(err);
@@ -318,19 +301,19 @@ export var deleteCart = async(req, res) => {
 
 export var createOrder = async(req, res) => {
     const cartId = req.params.id;
-    const buyer_id = req.user.id;
-    const buyerExist = await buyer.findOne({ _id: buyer_id });
-    if (buyerExist === null) {
+    const customer_id = req.user.id;
+    const customerExist = await customer.findOne({ _id: customer_id });
+    if (customerExist === null) {
         return res.status(403).send("Unauthorised User");
     } else {
         return res.status(201).send("not working", cartId);
     };
 };
 
-export var getSellers = (req, res) => {
-    seller.find({})
-        .then(sellers => {
-            res.status(200).json(sellers)
+export var getUsers = (req, res) => {
+    customer.find({})
+        .then(customers => {
+            res.status(200).json(customers)
         }).catch(err => {
             res.status(404).json({ message: err })
         });
@@ -357,9 +340,9 @@ export var getOrderById = (req, res) => {
 };
 
 export var deleteOrder = (req, res) => {
-    const buyer_id = req.user.id;
-    const buyerExist = buyer.findOne({ _id: buyer_id }).exec();
-    if (buyerExist === null) {
+    const customer_id = req.user.id;
+    const customerExist = customer.findOne({ _id: customer_id }).exec();
+    if (customerExist === null) {
         return res.status(403).send("Unauthorised User");
     }
     order.deleteOne({ _id: req.params.orderId })
@@ -380,13 +363,13 @@ export var deleteOrder = (req, res) => {
         });
 }
 
-export var sellerProducts = (req, res) => {
-    const sellerId = req.params.id;
-    product.find({ sellerId: sellerId })
+export var customerProducts = (req, res) => {
+    const customerId = req.params.id;
+    product.find({ customerId: customerId })
         .then(products => {
             res.status(200).json(products);
         }).catch(err => {
-            res.status(404).json({ message: "No Products of Seller Found" })
+            res.status(404).json({ message: "No Products of Customer Found" })
         });
 };
 
@@ -407,4 +390,109 @@ export var getProducts = (req, res) => {
         }).catch(err => {
             res.status(404).json({ message: "Products not Found" })
         });
+};
+
+export const updateStatus = async(req, res) => {
+    const { orderId, status } = req.body;
+    order.updateOne({ _id: orderId }, { $set: { status: status } })
+        .exec()
+        .then(result => {
+            res.status(200).json({
+                message: 'Status Updated',
+                order: result
+            });
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+};
+
+export var addProduct = async(req, res) => {
+    const customerId = req.user.id;
+    const Seller = await customer.findOne({ _id: customerId })
+    if (!Seller) {
+        res.status(401).json({ message: "Unauthorised User" })
+    } else {
+        const newProduct = new product({
+            name: req.body.name,
+            price: req.body.price,
+            quantity: req.body.quantity,
+            description: req.body.description,
+            img: req.body.img,
+            customerId: customerId
+        });
+        newProduct.save().then(result => {
+            res.status(201).json({
+                message: 'Product added',
+                createProduct: {
+                    _id: result._id,
+                    name: result.name,
+                    description: result.description,
+                    price: result.price,
+                    quantity: result.quantity,
+                    img: result.img
+                }
+            });
+        });
+    };
+};
+
+export var deleteProduct = async(req, res) => {
+    const id = req.params.id;
+    product.findById(id)
+        .select('name price _id')
+        .exec()
+        .then(doc => {
+            if (doc) {
+                return res.status(200).json({
+                    product: doc,
+                    status: "deleted"
+                });
+            } else {
+                res
+                    .status(404)
+                    .json({ message: "No valid entry found for provided ID" });
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({ error: err });
+        });
+    await product.deleteOne({ _id: id });
+};
+
+export var updateProduct = async(req, res) => {
+    const id = req.params.id;
+    const updateOps = {};
+    const { price, quantity, description } = req.body;
+    updateOps["price"] = price;
+    updateOps["quantity"] = quantity;
+    updateOps["description"] = description;
+    product.updateOne({ _id: id }, { $set: updateOps })
+        .exec()
+        .then(result => {
+            res.status(200).json({
+                message: 'Product updated',
+                product: result
+            });
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+};
+
+export var getOrders = async(req, res) => {
+    const customerId = req.user.id;
+    order.find({ customerId: customerId })
+        .then(orders => {
+            res.status(200).json(orders)
+        }).catch(err => {
+            res.status(404).json(err)
+        })
 };
