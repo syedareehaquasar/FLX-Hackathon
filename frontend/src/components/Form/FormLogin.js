@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function FormLogin() {
+function FormSignup() {
 
     const [values, setValues] = useState({
         fullname: "",
@@ -10,7 +10,7 @@ function FormLogin() {
         confirmPassword: ""
     });
 
-    const handleChange = (e) => {
+    const handleChange= (e) =>{
         const { name, value } = e.target;
         setValues({
             ...values,
@@ -38,25 +38,7 @@ function FormLogin() {
     }
 
     return (
-        <div className="signup">
-            <br /><br />
-            <h1>Signup</h1>
-            <br />
-            <form className="form" onSubmit={handleSubmit}>
-                <div className="form-inputs">
-                    <label className="form-label" htmlFor="fullname">
-                        <input className="form-input"
-                            type="text"
-                            placeholder="User Name"
-                            name="fullname"
-                            value={values.fullname}
-                            onChange={handleChange}
-                            autoComplete="off"
-                        />
-
-                    </label>
-                </div>
-                <br />
+        <div >
                 <div className="form-inputs">
                     <label className="form-label" htmlFor="email">
 
@@ -106,33 +88,9 @@ function FormLogin() {
 
                     </label>
                 </div>
-                <br />
-
-                <div className="form-inputs">
-                    <label className="form-label" htmlFor="confirmPassword">
-
-
-                        <input className="form-input"
-                            type="password"
-                            placeholder="Confirm Password"
-                            name="confirmPassword"
-                            value={values.confirmPassword}
-                            onChange={handleChange}
-                            autoComplete="off"
-                        />
-
-
-                    </label>
-                </div>
                 <br /><br />
-                <button className="form-input-btn" type="submit">Signup</button>
-                <span className='form-input-login'>
-                    Already have an account? Login <a href='#'>here</a>
-                </span>
-            </form>
-            <br />
         </div>
     )
 }
 
-export default FormLogin
+export default FormSignup

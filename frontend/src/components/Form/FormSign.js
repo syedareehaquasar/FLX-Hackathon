@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function FormSignup() {
+function FormLogin() { 
 
     const [values, setValues] = useState({
 
@@ -19,17 +19,27 @@ function FormSignup() {
     });
     }
 
-    const handleSubmit = (e) => {
-
-        e.preventDefault();
-    }
 
     return (
-        <div className="signup">
-            <br/><br/>
-            <h1>Login</h1>
-            <br/>
-            <form className="form">
+        <div>
+        
+                <div className="form-inputs">
+                    <label className="form-label" htmlFor="user">
+                        
+                        
+                        <input className="form-input"
+                            type="text"
+                            placeholder="User Name"
+                            name="user"
+                            onChange={handleChange}
+                            value={values.user}
+                            autoComplete="off"
+                        />
+                    
+                        
+                    </label>
+                </div>
+                <br />
                 <div className="form-inputs">
                     <label className="form-label" htmlFor="email">
                     
@@ -40,6 +50,7 @@ function FormSignup() {
                             onChange={handleChange}
                             value={values.email}
                             autoComplete="off"
+
                         />
                     
                         
@@ -63,16 +74,26 @@ function FormSignup() {
                 </div>
                 <br />
 
-                
+                <div className="form-inputs">
+                    <label className="form-label" htmlFor="pwd2">
+    
+                        
+                        <input className="form-input"
+                            type="password"
+                            placeholder="Confirm Password"
+                            name="pwd2"
+                            onChange={handleChange}
+                            value={values.pwd2}
+                            autoComplete="off"
+                        />
+        
+                        
+                    </label>
+                </div>
                 <br /><br />
-                <button className="form-input-btn" type="submit">Login</button>
-                <span className='form-input-login'>
-                    Don't have an account? Signup <a href='#'>here</a>
-                </span>
-            </form>
-            <br/>
+                
         </div>
     )
 }
 
-export default FormSignup
+export default FormLogin

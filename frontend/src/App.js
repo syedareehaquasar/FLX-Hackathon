@@ -8,15 +8,11 @@ import Products from './components/Products';
 
 function App() {
 
-  const [isLoggedIn, setLogin] = useState(false)
+  const [isLoggedIn, setLogin] = useState(true)
   return (
     <div className="App">
-      {/*isLoggedIn === false && <Login />*/}
-      {/* <Products /> */}
-      {/* <ProductCard /> */}
-      <Login />
-      
-      {/* <Navbar /> */}
+      {isLoggedIn === false && <Login />}
+      {isLoggedIn === true && <Products />}
       
     </div>
   );
