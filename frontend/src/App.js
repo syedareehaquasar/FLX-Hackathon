@@ -13,16 +13,12 @@ function App() {
 
   const [isLoggedIn, setLogin] = useState(false)
   return (
-    
-     
+
       <div>
 
         <Login />
 
       </div>
-
-
-    
 
   );
 }
