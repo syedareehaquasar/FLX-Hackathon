@@ -12,24 +12,11 @@ function App() {
 
   const [isLoggedIn, setLogin] = useState(false)
   return (
-<<<<<<< HEAD
-    
-     
       <div>
 
         <Login />
 
       </div>
-
-
-    
-=======
-    <div className="App">
-      {isLoggedIn === false && <Login />}
-      {isLoggedIn === true && <Products />}
-      
-    </div>
->>>>>>> 01b2d928f9de61d46cbf993418d213c92638c422
   );
 }
 
