@@ -2,6 +2,7 @@ import React from "react";
 import "./Prod.css"
 import Navbar from "./Navbar";
 import Header from "./Header";
+import { Link } from "react-router-dom";
 
 function Products() {
 
@@ -49,9 +50,11 @@ function Products() {
                 {ProductInfo.map(num => (
 
                     <div className="col-md-4">
+                        
                         <div className="user" >
-
+                        <Link to="/prodCard">
                             <img className="card-image" src={num.imgUrl} />
+                            </Link>
                             <div className="card-body">
                                 <h1 className="card-title">{num.title}</h1>
                                 <p className="card-text">{num.author} </p>
@@ -60,6 +63,7 @@ function Products() {
                               
                             </div>
                         </div>
+                        
                     </div>
 
                 ))
