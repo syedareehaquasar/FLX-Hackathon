@@ -62,7 +62,7 @@ function FormLogin() {
                     
                         <input className="form-input"
                             type="password"
-                            placeholder="Enter New Password"
+                            placeholder="Enter Password"
                             name="pwd1"
                             onChange={handleChange}
                             value={values.pwd1}
