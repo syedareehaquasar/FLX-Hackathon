@@ -29,6 +29,7 @@
     "mongoose": "^6.0.14",
     "nodemon": "^2.0.15",
     "razorpay": "^2.8.0",
+    "readme-md-generator": "^1.0.0",
     "shortid": "^2.2.16",
     "validator": "^13.7.0"
   }
