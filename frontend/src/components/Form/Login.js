@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import FormSignup from "./FormLogin";
 import FormLogin from "./FormSign";
+import {Link} from "react-router-dom"
 
 function Login() {
 
@@ -8,10 +9,7 @@ function Login() {
     const [btnTxt, setBtn] = useState("Login")
     const [spnTxt, setSpn] = useState("Don't Have an Account ? Signup ")
 
-    const handleNext = () => {
-
-        /* login true then products page open */
-    }
+   
 
     const handleChange = () => {
 
@@ -41,7 +39,7 @@ function Login() {
 
                             {sign === true ? (<FormLogin />) : (<FormSignup />)}
 
-                            <button className="form-input-btn" type="submit" onClick={handleNext}>{btnTxt}</button>
+                            <button className="form-input-btn" type="submit" ><Link to="/products">{btnTxt}</Link></button>
                             <span className='form-input-login'>
                                 {spnTxt}   <a href='#' onClick={handleChange}>here</a>
                             </span>

@@ -3,10 +3,24 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import {BrowserRouter, Routes, Route} from "react-router-dom"
+import Products from './components/Products';
+import User from "./components/User"
+import ProductCard from './components/ProductCard';
+
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+    <Routes>
+      <Route path="/" element={ <App /> } exact />
+      <Route path="/products" element = { <Products />} />
+      <Route path="/user" element={<User />}/>
+      <Route path="/prodCard" element={<ProductCard /> } />
+
+    </Routes>
+    
+    </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')
 );

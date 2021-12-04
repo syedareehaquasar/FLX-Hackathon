@@ -1,21 +1,27 @@
-import logo from './logo.svg';
+import { BrowserRouter, Route, Routes, Link } from "react-router-dom"
 import Login from "./components/Form/Login"
 import './App.css';
 import { useState } from 'react';
+
 import Navbar from './components/Navbar';
 import ProductCard from './components/ProductCard';
 import Products from './components/Products';
 
+
 function App() {
 
-  const [isLoggedIn, setLogin] = useState(true)
+  const [isLoggedIn, setLogin] = useState(false)
   return (
-    <div className="App">
     
-      {isLoggedIn === false && <Login />}
-      {isLoggedIn === true && <Products />}
-      
-    </div>
+     
+      <div>
+
+        <Login />
+
+      </div>
+
+
+    
   );
 }
 

@@ -2,13 +2,60 @@ body {
 
     position: relative;
 }
+.header {
+    overflow: hidden;
+  }
 
+  div {
+
+    text-align: center;
+  }
+  
+  .header a {
+    float: right;
+    display: block;
+    color: black;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+  }
+  
+  .header a:hover {
+    background-color: #ddd;
+    color: black;
+  }
+  
+  .header a.active {
+    background-color: #2196F3;
+    color: white;
+  }
+  
+  .header .search-container {
+    float: left;
+  }
+  
+  
+  .header .search-container button {
+    float: right;
+    padding: 6px 10px;
+    margin-top: 8px;
+    margin-right: 16px;
+    background: #ddd;
+    font-size: 17px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .header .search-container button:hover {
+    background: #ccc;
+  }
 .search {
 
     border-radius: 10px;
     padding: 10px;
-    width: 70%;
-    margin: 10px;
+    width: 50%;
+    margin: 20px;
 }
 .lis {
 

@@ -9,3 +9,31 @@
   background-color: rgba(255, 255, 255, 0.719);
   background-color: lavender;
 }
+
+.card-title  button {
+
+  font-size: 20px;
+}
+.prod-btn {
+
+  color: #000000;
+  background-color: #9cebd5;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 15px;
+  border: none;
+}
+
+.user {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  margin: auto;
+  text-align: center;
+  font-family: arial;
+  
+}
+
+.title {
+  color: grey;
+  font-size: 18px;
+}
